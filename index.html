@@ -23,7 +23,7 @@
     --viridian:#21403A;
     --viridian-deep:#16302B;
     --peony:#D96C82;
-    --peony-strong:#BB5065;      /* кнопки: контраст с белым текстом ≥4.5 */
+    --peony-strong:#BB5065;
     --peony-strong-deep:#A84457;
     --peony-deep:#C25A70;
     --peony-soft:#F6E3E7;
@@ -32,10 +32,27 @@
     --muted-dark:#B9C6C0;
     --line:#E4DED4;
     --white:#FFFFFF;
+    /* управляемые темой значения — восстанавливаются явно и для dark, и для light,
+       чтобы ручной переключатель всегда побеждал системную настройку ОС */
+    --heading:#21403A;
+    --link:#21403A;
+    --accent-text:#D96C82;
+    --avatar-bg:#21403A;
+    --chip-bg:#FFFFFF;
+    --chip-border:#21403A;
+    --chip-text:#21403A;
+    --status-bg:#EAF1EC;
+    --status-text:#21403A;
+    --phone-shadow:rgba(33,64,58,.10);
+    --input-bg:#FAF7F2;
+    --input-border:#E4DED4;
+    --placeholder:#8A968F;
+    --input-focus-border:#D96C82;
+    --header-control-bg:#FFFFFF;
+    --header-control-border:#E4DED4;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-  /* clip, а не hidden: hidden создаёт scroll-контейнер и ломает sticky-позиционирование */
   html,body{overflow-x:hidden;overflow-x:clip;max-width:100%}
   body{
     font-family:'Manrope',system-ui,sans-serif;
@@ -47,12 +64,12 @@
   h1,h2,.wordmark{font-family:'Prata',serif;font-weight:400;line-height:1.22}
   h1,h2,h3{text-wrap:balance}
   ::selection{background:var(--peony-soft);color:var(--ink)}
-  a{color:var(--viridian)}
+  a{color:var(--link)}
   section{scroll-margin-top:24px}
   :root{color-scheme:light dark}
   .wrap{
     max-width:1080px;margin:0 auto;width:100%;
-    padding-left:20px;padding-right:20px;   /* база: работает везде */
+    padding-left:20px;padding-right:20px;
   }
   @supports (padding-left: max(1px, 2px)){
     .wrap{
@@ -63,9 +80,10 @@
 
   /* header */
   header{padding-top:22px;padding-bottom:22px}
-  .header-row{display:flex;justify-content:space-between;align-items:center}
-  .wordmark{font-size:30px;color:var(--viridian);letter-spacing:.02em}
+  .header-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .wordmark{font-size:30px;color:var(--heading);letter-spacing:.02em}
   .wordmark span{color:var(--peony)}
+  .header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .btn{
     display:inline-block;background:var(--peony-strong);color:#FFFFFF;
     padding:13px 26px;border-radius:999px;text-decoration:none;
@@ -73,24 +91,53 @@
     transition:background .2s;
   }
   .btn:hover{background:var(--peony-strong-deep)}
-  .btn:focus-visible{outline:3px solid var(--viridian);outline-offset:3px}
+  .btn:focus-visible{outline:3px solid var(--heading);outline-offset:3px}
+
+  /* lang toggle */
+  .lang-toggle{display:flex;border:1.5px solid var(--header-control-border);border-radius:999px;overflow:hidden;background:var(--header-control-bg)}
+  .lang-btn{
+    border:none;background:transparent;color:var(--muted);font-family:inherit;
+    font-size:13px;font-weight:700;letter-spacing:.03em;padding:9px 14px;cursor:pointer;
+  }
+  .lang-btn[aria-pressed="true"]{background:var(--peony-strong);color:#fff}
+  .lang-btn:focus-visible{outline:2px solid var(--heading);outline-offset:-2px}
+
+  /* theme toggle */
+  .icon-btn{
+    width:40px;height:40px;flex:none;border-radius:50%;border:1.5px solid var(--header-control-border);
+    background:var(--header-control-bg);color:var(--heading);display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:border-color .2s;
+  }
+  .icon-btn:hover{border-color:var(--peony)}
+  .icon-btn:focus-visible{outline:2px solid var(--heading);outline-offset:2px}
+  .icon-btn svg{width:18px;height:18px}
+  .icon-moon{display:block}
+  .icon-sun{display:none}
+  @media (prefers-color-scheme: dark){
+    .icon-moon{display:none}
+    .icon-sun{display:block}
+  }
+  :root[data-theme="light"] .icon-moon{display:block}
+  :root[data-theme="light"] .icon-sun{display:none}
+  :root[data-theme="dark"] .icon-moon{display:none}
+  :root[data-theme="dark"] .icon-sun{display:block}
 
   /* hero */
   .hero{padding-top:44px;padding-bottom:76px}
   .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
-  .hero-grid > *{min-width:0}   /* grid blowout guard: контент не растягивает колонку за вьюпорт */
+  .hero-grid > *{min-width:0}
   .eyebrow{
     display:inline-block;font-size:13px;font-weight:700;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--peony);margin-bottom:18px;
+    text-transform:uppercase;color:var(--accent-text);margin-bottom:18px;
   }
-  h1{font-size:clamp(34px,4.6vw,52px);color:var(--viridian);margin-bottom:22px}
+  h1{font-size:clamp(34px,4.6vw,52px);color:var(--heading);margin-bottom:22px}
   .hero p.lead{font-size:19px;color:var(--muted);max-width:46ch;margin-bottom:30px}
   .hero-note{font-size:14px;color:var(--muted);margin-top:14px}
 
-  /* chat scene — signature */
+  /* chat scene */
   .phone{
     background:var(--white);border:1px solid var(--line);border-radius:26px;
-    padding:22px 18px 18px;box-shadow:0 18px 50px rgba(33,64,58,.10);
+    padding:22px 18px 18px;box-shadow:0 18px 50px var(--phone-shadow);
     width:100%;max-width:400px;margin:0 auto;
   }
   .msg,.status{overflow-wrap:break-word}
@@ -99,28 +146,28 @@
     padding-bottom:12px;margin-bottom:14px;
   }
   .avatar{
-    width:38px;height:38px;border-radius:50%;background:var(--viridian);
-    color:var(--porcelain);font-family:'Prata',serif;font-size:19px;
+    width:38px;height:38px;border-radius:50%;background:var(--avatar-bg);
+    color:#F2F0E9;font-family:'Prata',serif;font-size:19px;
     display:flex;align-items:center;justify-content:center;flex:none;
   }
-  .phone-head b{font-size:15px;display:block;line-height:1.2}
+  .phone-head b{font-size:15px;display:block;line-height:1.2;color:var(--heading)}
   .phone-head small{color:var(--muted);font-size:12px}
   .msg{
     max-width:85%;padding:11px 14px;border-radius:16px;font-size:14.5px;
     margin-bottom:10px;opacity:0;transform:translateY(8px);
     animation:pop .45s ease forwards;line-height:1.45;
   }
-  .from-rada{background:var(--viridian);color:#F2F0E9;border-bottom-left-radius:4px}
+  .from-rada{background:var(--avatar-bg);color:#F2F0E9;border-bottom-left-radius:4px}
   .from-client{background:var(--peony-soft);color:var(--ink);margin-left:auto;border-bottom-right-radius:4px}
   .chip-row{display:flex;gap:8px;flex-wrap:wrap;margin:-2px 0 10px;opacity:0;animation:pop .45s ease forwards}
   .chip{
-    font-size:13px;padding:7px 13px;border-radius:999px;border:1.5px solid var(--viridian);
-    color:var(--viridian);background:var(--white);font-weight:600;
+    font-size:13px;padding:7px 13px;border-radius:999px;border:1.5px solid var(--chip-border);
+    color:var(--chip-text);background:var(--chip-bg);font-weight:600;
   }
   .chip.pressed{animation:press .35s ease forwards;animation-delay:2.2s}
   .status{
-    text-align:center;font-size:13px;font-weight:700;color:var(--viridian);
-    background:#EAF1EC;border-radius:10px;padding:9px;opacity:0;animation:pop .5s ease forwards;
+    text-align:center;font-size:13px;font-weight:700;color:var(--status-text);
+    background:var(--status-bg);border-radius:10px;padding:9px;opacity:0;animation:pop .5s ease forwards;
   }
   @keyframes pop{to{opacity:1;transform:translateY(0)}}
   @keyframes press{to{background:var(--peony-strong);border-color:var(--peony-strong);color:#fff}}
@@ -137,7 +184,7 @@
     display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:center;
     background:var(--white);border:1px solid var(--line);border-radius:16px;padding:22px 26px;
   }
-  .stat-num{font-family:'Prata',serif;font-weight:400;font-size:clamp(26px,3.4vw,34px);color:var(--viridian);text-align:right;white-space:nowrap}
+  .stat-num{font-family:'Prata',serif;font-weight:400;font-size:clamp(26px,3.4vw,34px);color:var(--heading);text-align:right;white-space:nowrap}
   .stat-label{font-size:15.5px;color:var(--muted);border-left:1px solid var(--line);padding-left:24px}
   @media(max-width:560px){
     .stat-tile{grid-template-columns:1fr;text-align:left;gap:6px}
@@ -145,34 +192,32 @@
     .stat-label{border-left:none;padding-left:0}
   }
 
-  /* sections */
   section{padding:72px 0}
-  h2{font-size:clamp(27px,3.4vw,36px);color:var(--viridian);margin-bottom:14px;max-width:26ch}
+  h2{font-size:clamp(27px,3.4vw,36px);color:var(--heading);margin-bottom:14px;max-width:26ch}
   .section-lead{color:var(--muted);max-width:56ch;margin-bottom:40px}
 
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
-  .step{
-    background:var(--white);border:1px solid var(--line);border-radius:18px;padding:26px;
-  }
+  .step{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:26px}
   .step .tag{
     display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--peony);margin-bottom:12px;
+    text-transform:uppercase;color:var(--accent-text);margin-bottom:12px;
   }
-  .step h3{font-size:18px;margin-bottom:10px;color:var(--viridian)}
+  .step h3{font-size:18px;margin-bottom:10px;color:var(--heading)}
   .step p{font-size:15.5px;color:var(--muted)}
 
-  /* pricing */
+  /* .honest — фиксированный тёмный акцентный блок, НЕ зависит от темы страницы:
+     фон и текст константны в обоих режимах, поэтому раньше здесь и был скрытый баг
+     (color:var(--porcelain) утекал в чёрный текст на тёмной теме) */
   .honest{background:var(--viridian);color:#EDEAE2;border-radius:26px;padding:56px 48px}
-  .honest h2{color:var(--porcelain)}
+  .honest h2{color:#EDEAE2}
   .honest .section-lead{color:var(--muted-dark)}
   .honest-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:8px}
   .honest-card{border:1px solid rgba(250,247,242,.25);border-radius:16px;padding:24px}
-  .honest-card h3{font-size:17px;margin-bottom:8px;color:var(--porcelain)}
+  .honest-card h3{font-size:17px;margin-bottom:8px;color:#EDEAE2}
   .honest-card p{font-size:15.5px;color:var(--muted-dark)}
-  .price-line{font-family:'Prata',serif;font-size:22px;color:var(--porcelain);margin-top:26px}
+  .price-line{font-family:'Prata',serif;font-size:22px;color:#EDEAE2;margin-top:26px}
   .price-line small{font-family:'Manrope';font-size:14px;color:var(--muted-dark);display:block;margin-top:6px;max-width:60ch}
 
-  /* form — единая центральная ось */
   #waitlist{text-align:center}
   #waitlist h2{margin-left:auto;margin-right:auto}
   #waitlist .section-lead{margin-left:auto;margin-right:auto}
@@ -180,24 +225,23 @@
     background:var(--white);border:1px solid var(--line);border-radius:22px;
     padding:40px;max-width:560px;margin:0 auto;text-align:left;
   }
-  label{font-size:14px;font-weight:700;display:block;margin:18px 0 6px;color:var(--viridian)}
+  label{font-size:14px;font-weight:700;display:block;margin:18px 0 6px;color:var(--heading)}
   .form-card label:first-of-type{margin-top:0}
   input,select{
-    width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;
-    font-family:inherit;font-size:16px;background:var(--porcelain);color:var(--ink);
+    width:100%;padding:13px 14px;border:1.5px solid var(--input-border);border-radius:12px;
+    font-family:inherit;font-size:16px;background:var(--input-bg);color:var(--ink);
   }
-  input:focus,select:focus{outline:3px solid var(--peony-soft);border-color:var(--peony)} /* фоллбэк для Safari<15.4 */
-  input:focus-visible,select:focus-visible{outline:3px solid var(--peony-soft);border-color:var(--peony)}
+  input::placeholder{color:var(--placeholder)}
+  input:focus,select:focus{outline:3px solid var(--peony-soft);border-color:var(--input-focus-border)}
+  input:focus-visible,select:focus-visible{outline:3px solid var(--peony-soft);border-color:var(--input-focus-border)}
   .form-card .btn{width:100%;margin-top:26px;font-size:17px;padding:15px}
   .form-note{font-size:14px;color:var(--muted);text-align:center;margin-top:14px}
 
-  /* faq */
   details{border-bottom:1px solid var(--line);padding:18px 0}
-  summary{font-weight:700;cursor:pointer;font-size:17px;color:var(--viridian);border-radius:6px}
+  summary{font-weight:700;cursor:pointer;font-size:17px;color:var(--heading);border-radius:6px}
   summary:focus-visible{outline:3px solid var(--peony-soft);outline-offset:4px}
   details p{margin-top:10px;color:var(--muted);font-size:15.5px;max-width:70ch}
 
-  /* footer */
   footer{border-top:1px solid var(--line);padding-top:44px;padding-bottom:60px;font-size:14px;color:var(--muted)}
   footer .wordmark{font-size:22px;margin-bottom:14px}
   footer details{border:none;padding:8px 0}
@@ -214,38 +258,45 @@
     .stats{padding:36px 0}
   }
   @media (max-width:380px){
-    .wordmark{font-size:26px}
-    .btn{padding:12px 20px;font-size:15px}
+    .wordmark{font-size:24px}
+    .btn{padding:11px 18px;font-size:14.5px}
+    .lang-btn{padding:8px 10px;font-size:12px}
+    .icon-btn{width:36px;height:36px}
     .form-card{padding:28px 20px}
     .honest{padding:30px 18px}
   }
-  /* ===== Тёмная тема: собственная палитра вместо принудительной инверсии ===== */
+
+  /* ===== Тёмная тема: значения по системной настройке ОС ===== */
   @media (prefers-color-scheme: dark){
     :root{
-      --porcelain:#131F1B;      /* фон: глубокий зелёно-чёрный */
-      --ink:#E8E3D9;
-      --muted:#A6B5AD;
-      --muted-dark:#A6B5AD;
-      --line:#2E3D37;
-      --white:#1C2B26;          /* карточки */
-      --peony-soft:#472F36;     /* пузыри клиента */
+      --porcelain:#131F1B; --ink:#E8E3D9; --muted:#A6B5AD; --muted-dark:#A6B5AD;
+      --line:#2E3D37; --white:#1C2B26; --peony-soft:#472F36;
+      --heading:#EFE9DD; --link:#A8CFC2; --accent-text:#E794A6; --avatar-bg:#2B4C43;
+      --chip-bg:transparent; --chip-border:#A8CFC2; --chip-text:#CFE4DB;
+      --status-bg:#22352E; --status-text:#BFD9CD; --phone-shadow:rgba(0,0,0,.5);
+      --input-bg:#15221E; --input-border:#33443D; --placeholder:#7E8F86;
+      --input-focus-border:#E794A6; --header-control-bg:#1C2B26; --header-control-border:#33443D;
     }
-    h1,h2,.wordmark,.stat-num,label,summary,.step h3,.phone-head b{color:#EFE9DD}
-    a{color:#A8CFC2}
-    .btn:focus-visible{outline-color:#EFE9DD}
-    .eyebrow,.step .tag{color:#E794A6}          /* пион светлее для контраста */
-    .avatar,.from-rada{background:#2B4C43}
-    .from-client{color:#F4E0E5}
-    .chip{background:transparent;border-color:#A8CFC2;color:#CFE4DB}
-    .status{background:#22352E;color:#BFD9CD}
-    .phone{box-shadow:0 18px 50px rgba(0,0,0,.5)}
-    .honest{background:#0E1815}                  /* блок цен глубже фона страницы */
-    .honest h2,.honest-card h3,.price-line{color:#EFE9DD}
-    .honest-card{border-color:rgba(239,233,221,.18)}
-    input,select{background:#15221E;border-color:#33443D;color:var(--ink)}
-    input::placeholder{color:#7E8F86}
-    input:focus,select:focus,input:focus-visible,select:focus-visible{outline-color:#472F36;border-color:#E794A6}
-    ::selection{background:#472F36;color:#F4E0E5}
+  }
+  /* ===== Ручной переключатель: явно восстанавливает ВСЕ переменные в обе стороны,
+     чтобы гарантированно побеждать системную настройку по специфичности селектора ===== */
+  :root[data-theme="dark"]{
+    --porcelain:#131F1B; --ink:#E8E3D9; --muted:#A6B5AD; --muted-dark:#A6B5AD;
+    --line:#2E3D37; --white:#1C2B26; --peony-soft:#472F36;
+    --heading:#EFE9DD; --link:#A8CFC2; --accent-text:#E794A6; --avatar-bg:#2B4C43;
+    --chip-bg:transparent; --chip-border:#A8CFC2; --chip-text:#CFE4DB;
+    --status-bg:#22352E; --status-text:#BFD9CD; --phone-shadow:rgba(0,0,0,.5);
+    --input-bg:#15221E; --input-border:#33443D; --placeholder:#7E8F86;
+    --input-focus-border:#E794A6; --header-control-bg:#1C2B26; --header-control-border:#33443D;
+  }
+  :root[data-theme="light"]{
+    --porcelain:#FAF7F2; --ink:#22302C; --muted:#59685F; --muted-dark:#B9C6C0;
+    --line:#E4DED4; --white:#FFFFFF; --peony-soft:#F6E3E7;
+    --heading:#21403A; --link:#21403A; --accent-text:#D96C82; --avatar-bg:#21403A;
+    --chip-bg:#FFFFFF; --chip-border:#21403A; --chip-text:#21403A;
+    --status-bg:#EAF1EC; --status-text:#21403A; --phone-shadow:rgba(33,64,58,.10);
+    --input-bg:#FAF7F2; --input-border:#E4DED4; --placeholder:#8A968F;
+    --input-focus-border:#D96C82; --header-control-bg:#FFFFFF; --header-control-border:#E4DED4;
   }
 </style>
 </head>
@@ -253,8 +304,18 @@
 
 <header class="wrap">
   <div class="header-row">
-    <div class="wordmark">Рада<span>.</span></div>
-    <a class="btn" href="#waitlist">В пилот</a>
+    <div class="wordmark" data-i18n-html="brand">Рада<span>.</span></div>
+    <div class="header-actions">
+      <div class="lang-toggle" role="group" aria-label="Язык / Language">
+        <button type="button" class="lang-btn" data-lang-btn="ru" aria-pressed="true">RU</button>
+        <button type="button" class="lang-btn" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+      <button type="button" class="icon-btn" id="themeToggle" aria-label="Переключить тему оформления">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+      <a class="btn" href="#waitlist" data-i18n="header.cta">В пилот</a>
+    </div>
   </div>
 </header>
 
@@ -262,28 +323,28 @@
 <section class="hero wrap">
   <div class="hero-grid">
     <div>
-      <span class="eyebrow">Ассистент записи для бьюти-мастеров</span>
-      <h1>Клиенты забывают о&nbsp;записи. Рада&nbsp;— помнит.</h1>
-      <p class="lead">Рада напоминает вашим клиентам в WhatsApp и Telegram, переносит записи и отдаёт освободившиеся окна тем, кто ждёт,&nbsp;— пока вы работаете руками.</p>
-      <a class="btn" href="#waitlist">Занять место в пилоте</a>
-      <p class="hero-note">Первые 10 мастеров — 2 месяца без комиссии.</p>
+      <span class="eyebrow" data-i18n="hero.eyebrow">Ассистент записи для бьюти-мастеров</span>
+      <h1 data-i18n-html="hero.title">Клиенты забывают о&nbsp;записи. Рада&nbsp;— помнит.</h1>
+      <p class="lead" data-i18n-html="hero.lead">Рада напоминает вашим клиентам в WhatsApp и Telegram, переносит записи и отдаёт освободившиеся окна тем, кто ждёт,&nbsp;— пока вы работаете руками.</p>
+      <a class="btn" href="#waitlist" data-i18n="hero.cta">Занять место в пилоте</a>
+      <p class="hero-note" data-i18n="hero.note">Первые 10 мастеров — 2 месяца без комиссии.</p>
     </div>
 
     <div class="phone" aria-label="Пример диалога Рады с клиентом">
       <div class="phone-head">
-        <div class="avatar">Р</div>
-        <div><b>Рада · ассистент Алии</b><small>WhatsApp</small></div>
+        <div class="avatar" data-i18n="phone.avatar">Р</div>
+        <div><b data-i18n="phone.title">Рада · ассистент Алии</b><small>WhatsApp</small></div>
       </div>
-      <div class="msg from-rada d1">Асель, добрый день! Напоминаю: завтра в 15:00 маникюр с покрытием у Алии 💅</div>
+      <div class="msg from-rada d1" data-i18n="phone.msg1">Асель, добрый день! Напоминаю: завтра в 15:00 маникюр с покрытием у Алии 💅</div>
       <div class="chip-row d2">
-        <span class="chip">Подтверждаю</span>
-        <span class="chip pressed">Перенести</span>
-        <span class="chip">Отменить</span>
+        <span class="chip" data-i18n="phone.confirm">Подтверждаю</span>
+        <span class="chip pressed" data-i18n="phone.reschedule">Перенести</span>
+        <span class="chip" data-i18n="phone.cancel">Отменить</span>
       </div>
-      <div class="msg from-client d3">Ой, завтра не успеваю 🙈</div>
-      <div class="msg from-rada d4">Ничего страшного! Есть окошки: чт 11:00, чт 16:30, пт 15:00. Какое удобно?</div>
-      <div class="msg from-client d5">Чт 16:30 идеально</div>
-      <div class="status d6">✓ Запись перенесена — окно на завтра уже предложено листу ожидания</div>
+      <div class="msg from-client d3" data-i18n="phone.msg2">Ой, завтра не успеваю 🙈</div>
+      <div class="msg from-rada d4" data-i18n="phone.msg3">Ничего страшного! Есть окошки: чт 11:00, чт 16:30, пт 15:00. Какое удобно?</div>
+      <div class="msg from-client d5" data-i18n="phone.msg4">Чт 16:30 идеально</div>
+      <div class="status d6" data-i18n="phone.status">✓ Запись перенесена — окно на завтра уже предложено листу ожидания</div>
     </div>
   </div>
 </section>
@@ -291,124 +352,279 @@
 <div class="stats">
   <div class="wrap">
     <div class="stat-grid">
-      <div class="stat-tile"><div class="stat-num">15–20%</div><div class="stat-label">записей теряется из-за неявок</div></div>
-      <div class="stat-tile"><div class="stat-num">−50%</div><div class="stat-label">неявок после напоминаний с лёгкой отменой</div></div>
-      <div class="stat-tile"><div class="stat-num">2 часа</div><div class="stat-label">в день уходит у мастера на одни переписки</div></div>
+      <div class="stat-tile"><div class="stat-num">15–20%</div><div class="stat-label" data-i18n="stats.s1">записей теряется из-за неявок</div></div>
+      <div class="stat-tile"><div class="stat-num">−50%</div><div class="stat-label" data-i18n="stats.s2">неявок после напоминаний с лёгкой отменой</div></div>
+      <div class="stat-tile"><div class="stat-num" data-i18n="stats.s3num">2 часа</div><div class="stat-label" data-i18n="stats.s3">в день уходит у мастера на одни переписки</div></div>
     </div>
   </div>
 </div>
 
 <section class="wrap" id="how">
-  <h2>Как Рада возвращает вам записи</h2>
-  <p class="section-lead">Клиентам не нужно ничего устанавливать и нигде регистрироваться — всё происходит в привычном чате, в один тап.</p>
+  <h2 data-i18n="how.h2">Как Рада возвращает вам записи</h2>
+  <p class="section-lead" data-i18n="how.lead">Клиентам не нужно ничего устанавливать и нигде регистрироваться — всё происходит в привычном чате, в один тап.</p>
   <div class="steps">
     <div class="step">
-      <span class="tag">Накануне</span>
-      <h3>Напоминает с кнопками</h3>
-      <p>За сутки и за два часа до визита клиент получает напоминание: подтвердить, перенести или отменить — одним нажатием, без звонков и «вы придёте?».</p>
+      <span class="tag" data-i18n="how.tag1">Накануне</span>
+      <h3 data-i18n="how.h1_1">Напоминает с кнопками</h3>
+      <p data-i18n="how.p1">За сутки и за два часа до визита клиент получает напоминание: подтвердить, перенести или отменить — одним нажатием, без звонков и «вы придёте?».</p>
     </div>
     <div class="step">
-      <span class="tag">Если планы изменились</span>
-      <h3>Переносит сама</h3>
-      <p>Рада показывает свободные окошки и переносит запись за клиента. Вам ничего писать не нужно — в календаре уже новое время.</p>
+      <span class="tag" data-i18n="how.tag2">Если планы изменились</span>
+      <h3 data-i18n="how.h1_2">Переносит сама</h3>
+      <p data-i18n="how.p2">Рада показывает свободные окошки и переносит запись за клиента. Вам ничего писать не нужно — в календаре уже новое время.</p>
     </div>
     <div class="step">
-      <span class="tag">Окно не пропадает</span>
-      <h3>Заполняет освободившееся время</h3>
-      <p>Отменённый слот Рада тут же предлагает клиентам из листа ожидания. Пока другие теряют день, у вас — полная запись.</p>
+      <span class="tag" data-i18n="how.tag3">Окно не пропадает</span>
+      <h3 data-i18n="how.h1_3">Заполняет освободившееся время</h3>
+      <p data-i18n="how.p3">Отменённый слот Рада тут же предлагает клиентам из листа ожидания. Пока другие теряют день, у вас — полная запись.</p>
     </div>
   </div>
 </section>
 
 <section class="wrap">
   <div class="honest">
-    <h2>Платите за результат, а не за подписку</h2>
-    <p class="section-lead">Мы считаем спасённой только запись, которая реально состоялась после переноса или заполнения окна. И честно показываем каждую.</p>
+    <h2 data-i18n="pricing.h2">Платите за результат, а не за подписку</h2>
+    <p class="section-lead" data-i18n="pricing.lead">Мы считаем спасённой только запись, которая реально состоялась после переноса или заполнения окна. И честно показываем каждую.</p>
     <div class="honest-grid">
       <div class="honest-card">
-        <h3>Что оплачивается</h3>
-        <p>Перенос, после которого клиент пришёл. Отменённое окно, занятое другим клиентом. Каждый случай — с историей сообщений: видно, за что платите.</p>
+        <h3 data-i18n="pricing.card1h">Что оплачивается</h3>
+        <p data-i18n="pricing.card1p">Перенос, после которого клиент пришёл. Отменённое окно, занятое другим клиентом. Каждый случай — с историей сообщений: видно, за что платите.</p>
       </div>
       <div class="honest-card">
-        <h3>Что бесплатно — всегда</h3>
-        <p>Все напоминания и подтверждения. Если клиент просто подтвердил и пришёл — мы не считаем это своей заслугой и денег не берём.</p>
+        <h3 data-i18n="pricing.card2h">Что бесплатно — всегда</h3>
+        <p data-i18n="pricing.card2p">Все напоминания и подтверждения. Если клиент просто подтвердил и пришёл — мы не считаем это своей заслугой и денег не берём.</p>
       </div>
     </div>
-    <p class="price-line">10% от стоимости спасённой записи · не больше $29 в месяц
+    <p class="price-line" data-i18n-html="pricing.priceline">10% от стоимости спасённой записи · не больше $29 в месяц
       <small>Пример: спасённый маникюр за €40 → €4. Ни одной спасённой записи — счёт за месяц равен нулю.</small>
     </p>
   </div>
 </section>
 
 <section class="wrap" id="waitlist">
-  <h2>Пилот: 10 мест</h2>
-  <p class="section-lead">Запускаемся с небольшой группой мастеров: настроим Раду под ваш стиль общения вместе с вами. Два месяца — без комиссии, отключиться можно в любой момент.</p>
-  <!-- ЗАМЕНИТЬ action: создать форму на formspree.io и вставить свой endpoint -->
-  <form class="form-card" action="https://formspree.io/f/REPLACE_ME" method="POST">
+  <h2 data-i18n="wait.h2">Пилот: 10 мест</h2>
+  <p class="section-lead" data-i18n="wait.lead">Запускаемся с небольшой группой мастеров: настроим Раду под ваш стиль общения вместе с вами. Два месяца — без комиссии, отключиться можно в любой момент.</p>
+  <form class="form-card" action="https://formspree.io/f/mbdvqaaq" method="POST">
     <input type="hidden" name="_subject" value="Rada: заявка в пилот">
-    <label for="name">Как вас зовут</label>
+    <label for="name" data-i18n="wait.name">Как вас зовут</label>
     <input id="name" name="name" type="text" required autocomplete="name">
-    <label for="city">Город</label>
-    <input id="city" name="city" type="text" required placeholder="Алматы, Берлин, Батуми…">
-    <label for="contact">Instagram или телефон</label>
-    <input id="contact" name="contact" type="text" required placeholder="@ваш_профиль или +7…">
-    <label for="niche">Чем занимаетесь</label>
+    <label for="city" data-i18n="wait.city">Город</label>
+    <input id="city" name="city" type="text" required data-i18n-attr="placeholder:wait.city_ph" placeholder="Алматы, Берлин, Батуми…">
+    <label for="contact" data-i18n="wait.contact">Instagram или телефон</label>
+    <input id="contact" name="contact" type="text" required data-i18n-attr="placeholder:wait.contact_ph" placeholder="@ваш_профиль или +7…">
+    <label for="niche" data-i18n="wait.niche">Чем занимаетесь</label>
     <select id="niche" name="niche" required>
-      <option value="" disabled selected>Выберите</option>
-      <option>Маникюр / педикюр</option>
-      <option>Брови / ресницы</option>
-      <option>Волосы</option>
-      <option>Косметология</option>
-      <option>Массаж</option>
-      <option>Салон (несколько мастеров)</option>
-      <option>Другое</option>
+      <option value="" disabled selected data-i18n="wait.opt0">Выберите</option>
+      <option data-i18n="wait.opt1">Маникюр / педикюр</option>
+      <option data-i18n="wait.opt2">Брови / ресницы</option>
+      <option data-i18n="wait.opt3">Волосы</option>
+      <option data-i18n="wait.opt4">Косметология</option>
+      <option data-i18n="wait.opt5">Массаж</option>
+      <option data-i18n="wait.opt6">Салон (несколько мастеров)</option>
+      <option data-i18n="wait.opt7">Другое</option>
     </select>
-    <button class="btn" type="submit">Занять место в пилоте</button>
-    <p class="form-note">Напишем лично в течение пары дней. Никаких рассылок.</p>
+    <button class="btn" type="submit" data-i18n="wait.submit">Занять место в пилоте</button>
+    <p class="form-note" data-i18n="wait.note">Напишем лично в течение пары дней. Никаких рассылок.</p>
   </form>
 </section>
 
 <section class="wrap" id="faq">
-  <h2>Частые вопросы</h2>
+  <h2 data-i18n="faq.h2">Частые вопросы</h2>
   <details>
-    <summary>Это очередной бот, который будет позорить меня перед клиентами?</summary>
-    <p>Нет. Рада пишет только заранее согласованные с вами сообщения — вашим тоном и от имени вашего кабинета. Если клиент спрашивает что-то нестандартное, Рада не выдумывает ответ, а передаёт вопрос вам и отвечает клиенту, что мастер скоро на связи.</p>
+    <summary data-i18n="faq.q1">Это очередной бот, который будет позорить меня перед клиентами?</summary>
+    <p data-i18n="faq.a1">Нет. Рада пишет только заранее согласованные с вами сообщения — вашим тоном и от имени вашего кабинета. Если клиент спрашивает что-то нестандартное, Рада не выдумывает ответ, а передаёт вопрос вам и отвечает клиенту, что мастер скоро на связи.</p>
   </details>
   <details>
-    <summary>Что нужно от моих клиентов?</summary>
-    <p>Ничего. Ни приложений, ни регистраций — они получают обычное сообщение в WhatsApp или Telegram и отвечают одним нажатием кнопки.</p>
+    <summary data-i18n="faq.q2">Что нужно от моих клиентов?</summary>
+    <p data-i18n="faq.a2">Ничего. Ни приложений, ни регистраций — они получают обычное сообщение в WhatsApp или Telegram и отвечают одним нажатием кнопки.</p>
   </details>
   <details>
-    <summary>Как вы поймёте, что запись «спасена»?</summary>
-    <p>Спасённой считается только запись, которая состоялась после переноса или после того, как отменённое окно заняли из листа ожидания. Каждый случай сопровождается историей сообщений — вы видите цепочку и можете оспорить любую в течение 7 дней.</p>
+    <summary data-i18n="faq.q3">Как вы поймёте, что запись «спасена»?</summary>
+    <p data-i18n="faq.a3">Спасённой считается только запись, которая состоялась после переноса или после того, как отменённое окно заняли из листа ожидания. Каждый случай сопровождается историей сообщений — вы видите цепочку и можете оспорить любую в течение 7 дней.</p>
   </details>
   <details>
-    <summary>Какие мессенджеры поддерживаются?</summary>
-    <p>На старте — Telegram и WhatsApp. Instagram Direct — следующий на подключение.</p>
+    <summary data-i18n="faq.q4">Какие мессенджеры поддерживаются?</summary>
+    <p data-i18n="faq.a4">На старте — Telegram и WhatsApp. Instagram Direct — следующий на подключение.</p>
   </details>
 </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <div class="wordmark">Рада<span>.</span></div>
-    <p>Вопросы: <a href="mailto:hello@getrada.app">hello@getrada.app</a></p>
-    <p style="margin:8px 0 18px">Rada — независимый проект. Автор: Dima Tyurnikov, Грузия. Данные обрабатываются на серверах за пределами РФ.</p>
+    <div class="wordmark" data-i18n-html="brand">Рада<span>.</span></div>
+    <p data-i18n-html="footer.questions">Вопросы: <a href="mailto:hello@getrada.app">hello@getrada.app</a></p>
+    <p style="margin:8px 0 18px" data-i18n="footer.author">Rada — независимый проект. Автор: Dima Tyurnikov, Грузия. Данные обрабатываются на серверах за пределами РФ.</p>
     <details>
-      <summary>Условия использования</summary>
-      <p>Рада — сервис напоминаний и управления записями для специалистов сферы услуг. Оплата взимается только за подтверждённые спасённые записи по тарифу, указанному на этой странице, с месячным лимитом $29. Подписка не требуется; специалист может прекратить использование в любой момент без штрафов. Сервис не является медицинской или юридической услугой.</p>
+      <summary data-i18n="footer.terms_h">Условия использования</summary>
+      <p data-i18n="footer.terms_p">Рада — сервис напоминаний и управления записями для специалистов сферы услуг. Оплата взимается только за подтверждённые спасённые записи по тарифу, указанному на этой странице, с месячным лимитом $29. Подписка не требуется; специалист может прекратить использование в любой момент без штрафов. Сервис не является медицинской или юридической услугой.</p>
     </details>
     <details>
-      <summary>Конфиденциальность</summary>
-      <p>Мы обрабатываем: контактные данные специалиста; имена, контакты и записи его клиентов — исключительно для отправки напоминаний и управления расписанием. Данные хранятся на серверах в ЕС/США, не продаются и не передаются третьим лицам, кроме платёжного провайдера и операторов мессенджеров, обеспечивающих доставку сообщений. Удаление данных — по запросу на hello@getrada.app в течение 30 дней.</p>
+      <summary data-i18n="footer.privacy_h">Конфиденциальность</summary>
+      <p data-i18n="footer.privacy_p">Мы обрабатываем: контактные данные специалиста; имена, контакты и записи его клиентов — исключительно для отправки напоминаний и управления расписанием. Данные хранятся на серверах в ЕС/США, не продаются и не передаются третьим лицам, кроме платёжного провайдера и операторов мессенджеров, обеспечивающих доставку сообщений. Удаление данных — по запросу на hello@getrada.app в течение 30 дней.</p>
     </details>
     <details>
-      <summary>Возвраты</summary>
-      <p>Любую спасённую запись можно оспорить в течение 7 дней из личного кабинета или письмом. Если запись не соответствует нашим публичным критериям (состоявшийся визит после переноса либо заполнения отменённого окна), платёж за неё возвращается полностью в течение 10 рабочих дней.</p>
+      <summary data-i18n="footer.refunds_h">Возвраты</summary>
+      <p data-i18n="footer.refunds_p">Любую спасённую запись можно оспорить в течение 7 дней из личного кабинета или письмом. Если запись не соответствует нашим публичным критериям (состоявшийся визит после переноса либо заполнения отменённого окна), платёж за неё возвращается полностью в течение 10 рабочих дней.</p>
     </details>
     <p style="margin-top:18px">© 2026 Rada</p>
   </div>
 </footer>
 
+<script>
+(function(){
+  "use strict";
+
+  /* ===== ТЕМА ===== */
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('themeToggle');
+  function setTheme(t){
+    if(t){ root.setAttribute('data-theme', t); localStorage.setItem('rada-theme', t); }
+  }
+  var savedTheme = null;
+  try{ savedTheme = localStorage.getItem('rada-theme'); }catch(e){}
+  if(savedTheme === 'light' || savedTheme === 'dark'){ root.setAttribute('data-theme', savedTheme); }
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme');
+    if(!current){
+      current = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    setTheme(current === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ===== ПЕРЕВОДЫ ===== */
+  var translations = {
+    en: {
+      "brand": "Rada<span>.</span>",
+      "header.cta": "Join pilot",
+      "hero.eyebrow": "Booking assistant for beauty professionals",
+      "hero.title": "Clients forget appointments. Rada&nbsp;doesn't.",
+      "hero.lead": "Rada reminds your clients over WhatsApp and Telegram, reschedules bookings, and hands cancelled slots to clients on the waiting list&nbsp;— while your hands are busy with a client.",
+      "hero.cta": "Claim a pilot spot",
+      "hero.note": "First 10 professionals — 2 months, zero commission.",
+      "phone.avatar": "R",
+      "phone.title": "Rada · assistant to Aliya",
+      "phone.msg1": "Hi Asel! Just a reminder: tomorrow at 3:00 PM, gel manicure with Aliya 💅",
+      "phone.confirm": "Confirm",
+      "phone.reschedule": "Reschedule",
+      "phone.cancel": "Cancel",
+      "phone.msg2": "Oh, I can't make it tomorrow 🙈",
+      "phone.msg3": "No worries! Open slots: Thu 11:00 AM, Thu 4:30 PM, Fri 3:00 PM. Which works?",
+      "phone.msg4": "Thu 4:30 PM is perfect",
+      "phone.status": "✓ Appointment rescheduled — tomorrow's slot already offered to the waiting list",
+      "stats.s1": "of bookings lost to no-shows",
+      "stats.s2": "fewer no-shows with reminders and easy cancellation",
+      "stats.s3num": "2 hours",
+      "stats.s3": "a day spent by professionals just on messaging",
+      "how.h2": "How Rada brings your bookings back",
+      "how.lead": "Clients don't need to install anything or sign up anywhere — it all happens in the chat they already use, with one tap.",
+      "how.tag1": "The day before",
+      "how.h1_1": "Reminds with buttons",
+      "how.p1": "24 hours and 2 hours before the appointment, the client gets a reminder: confirm, reschedule, or cancel — one tap, no calls, no \u201Care you still coming?\u201D",
+      "how.tag2": "If plans change",
+      "how.h1_2": "Reschedules on its own",
+      "how.p2": "Rada shows open slots and reschedules the appointment for the client. You don't have to write anything — the calendar already shows the new time.",
+      "how.tag3": "No slot goes to waste",
+      "how.h1_3": "Fills the freed-up time",
+      "how.p3": "A cancelled slot is immediately offered to clients on the waiting list. While others lose a day, your schedule stays full.",
+      "pricing.h2": "Pay for results, not a subscription",
+      "pricing.lead": "We only count an appointment as saved if it actually happened after a reschedule or a slot refill. And we show you every single one.",
+      "pricing.card1h": "What you pay for",
+      "pricing.card1p": "A reschedule the client actually showed up for. A cancelled slot filled by another client. Every case comes with a message history — you see exactly what you're paying for.",
+      "pricing.card2h": "What's always free",
+      "pricing.card2p": "Every reminder and confirmation. If a client simply confirmed and showed up, we don't take credit for that — and we don't charge for it.",
+      "pricing.priceline": "10% of the saved appointment's value · capped at $29/month<small>Example: a saved €40 manicure → €4. No saved appointments — your bill is zero.</small>",
+      "wait.h2": "Pilot: 10 spots",
+      "wait.lead": "We're launching with a small group of professionals and will tune Rada to your communication style together. Two months, zero commission — cancel anytime.",
+      "wait.name": "Your name",
+      "wait.city": "City",
+      "wait.city_ph": "Almaty, Berlin, Batumi…",
+      "wait.contact": "Instagram or phone",
+      "wait.contact_ph": "@your_handle or +1…",
+      "wait.niche": "What you do",
+      "wait.opt0": "Choose",
+      "wait.opt1": "Manicure / pedicure",
+      "wait.opt2": "Brows / lashes",
+      "wait.opt3": "Hair",
+      "wait.opt4": "Cosmetology",
+      "wait.opt5": "Massage",
+      "wait.opt6": "Salon (multiple professionals)",
+      "wait.opt7": "Other",
+      "wait.submit": "Claim a pilot spot",
+      "wait.note": "We'll reach out personally within a couple of days. No newsletters.",
+      "faq.h2": "Frequently asked questions",
+      "faq.q1": "Is this just another bot that'll embarrass me in front of my clients?",
+      "faq.a1": "No. Rada only sends messages you've approved in advance — in your tone, on behalf of your business. If a client asks something unusual, Rada doesn't make up an answer — she passes it to you and tells the client you'll be in touch soon.",
+      "faq.q2": "What do my clients need to do?",
+      "faq.a2": "Nothing. No apps, no sign-ups — they get a normal WhatsApp or Telegram message and reply with one tap.",
+      "faq.q3": "How do you know an appointment was \u201Csaved\u201D?",
+      "faq.a3": "An appointment counts as saved only if it actually took place after a reschedule, or after a cancelled slot was filled from the waiting list. Every case comes with a message history — you can see the chain and dispute any charge within 7 days.",
+      "faq.q4": "Which messengers are supported?",
+      "faq.a4": "At launch — Telegram and WhatsApp. Instagram Direct is next.",
+      "footer.questions": "Questions: <a href=\"mailto:hello@getrada.app\">hello@getrada.app</a>",
+      "footer.author": "Rada is an independent project. Made by Dima Tyurnikov, Georgia. Data is processed on servers outside Russia.",
+      "footer.terms_h": "Terms of use",
+      "footer.terms_p": "Rada is a reminder and booking management service for service professionals. Charges apply only to confirmed saved appointments at the rate shown on this page, capped at $29/month. No subscription required; professionals may stop using the service anytime, without penalties. This is not a medical or legal service.",
+      "footer.privacy_h": "Privacy",
+      "footer.privacy_p": "We process: the professional's contact details; and their clients' names, contacts, and appointments — solely to send reminders and manage scheduling. Data is stored on servers in the EU/US, never sold or shared with third parties except the payment provider and messaging operators needed to deliver messages. Data deletion on request at hello@getrada.app within 30 days.",
+      "footer.refunds_h": "Refunds",
+      "footer.refunds_p": "Any saved-appointment charge can be disputed within 7 days from the dashboard or by email. If an appointment doesn't meet our published criteria (a completed visit after a reschedule or a filled cancelled slot), the charge is refunded in full within 10 business days."
+    }
+  };
+  var originals = {}; // кэш исходного RU для возврата без перезагрузки
+  var titleRu = document.title;
+  var titleEn = "Rada — booking assistant for beauty professionals";
+
+  function applyLang(lang){
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if(!originals[key]) originals[key] = el.textContent;
+      el.textContent = (lang === 'en' && translations.en[key]) ? translations.en[key] : originals[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+      var key = el.getAttribute('data-i18n-html');
+      if(!originals['html:'+key]) originals['html:'+key] = el.innerHTML;
+      el.innerHTML = (lang === 'en' && translations.en[key]) ? translations.en[key] : originals['html:'+key];
+    });
+    document.querySelectorAll('[data-i18n-attr]').forEach(function(el){
+      var parts = el.getAttribute('data-i18n-attr').split(':');
+      var attr = parts[0], key = parts[1];
+      var cacheKey = 'attr:'+attr+':'+key;
+      if(!originals[cacheKey]) originals[cacheKey] = el.getAttribute(attr);
+      el.setAttribute(attr, (lang === 'en' && translations.en[key]) ? translations.en[key] : originals[cacheKey]);
+    });
+    document.documentElement.lang = lang;
+    document.title = (lang === 'en') ? titleEn : titleRu;
+    document.querySelectorAll('[data-lang-btn]').forEach(function(btn){
+      btn.setAttribute('aria-pressed', btn.getAttribute('data-lang-btn') === lang ? 'true' : 'false');
+    });
+    try{ localStorage.setItem('rada-lang', lang); }catch(e){}
+  }
+
+  function detectLang(){
+    try{
+      var saved = localStorage.getItem('rada-lang');
+      if(saved) return saved;
+    }catch(e){}
+    try{
+      var lowRuDiasporaTz = ['Europe/Sofia','Europe/Bucharest','Europe/Zagreb',
+        'Europe/Ljubljana','Europe/Athens','Europe/Skopje'];
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      var browserLang = (navigator.language || '').toLowerCase();
+      if(lowRuDiasporaTz.indexOf(tz) !== -1 && browserLang.indexOf('ru') !== 0){
+        return 'en';
+      }
+    }catch(e){}
+    return 'ru';
+  }
+
+  document.querySelectorAll('[data-lang-btn]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      applyLang(btn.getAttribute('data-lang-btn'));
+    });
+  });
+
+  applyLang(detectLang());
+})();
+</script>
 </body>
 </html>
